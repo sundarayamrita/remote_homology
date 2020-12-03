@@ -1,0 +1,4 @@
+>d2c7lb_ a.1.1.3 (B:) automated matches {Mastigocladus laminosus [TaxId: 83541]}
+mldafsrvveqadkkgaylsndeinalqaivadsnkrldvvnrltsnassivanayralv
+aerpqvfnpggpcfhhrnqaacirdlgfilryvtysvlagdtsvmddrclnglretyqal
+gtpgdavasgikkmkeaalkiandpngitkgdcsqlmselasyfdraaaava
