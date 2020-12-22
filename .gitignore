@@ -1,3 +1,6 @@
 Homologues/
 PSSMs/
-Data_single_sequence/
+Data_single_seq/
+__pycache__/
+*.txt
+pdbaa
