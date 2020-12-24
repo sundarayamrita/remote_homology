@@ -13,7 +13,7 @@ def pssm_extraction(filename):
         
         del lines[0]
         del lines[linesnum-15:]
-        lines=lines[1:60]
+        
 
         for line in lines:
             elements = line.strip().split()
