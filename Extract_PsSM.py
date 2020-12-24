@@ -12,10 +12,14 @@ def pssm_extraction(filename):
         
         del lines[0]
         
-        for line in lines:
+        for i in range(len(lines)):
+            line=lines[i]
             elements = line.strip().split()
             temp=[]
+            if('Lambda' in line):
+                break
             for i in elements:
+                
                 if(i!='' and i<'A'):
                     temp.append(i)
             if(len(temp[1:21])>1):
