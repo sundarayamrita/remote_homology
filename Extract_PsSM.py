@@ -26,6 +26,6 @@ def pssm_extraction(filename):
         
         
     
-    print(inputmat)
+    return(inputmat)
 
 
