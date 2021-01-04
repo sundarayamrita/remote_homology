@@ -16,7 +16,7 @@ else:
 	query_dir = Path(args.pssm_dir)
 
 if args.sf_index:
-	superfamily_file = args.sf_index + '.txt'
+	superfamily_file = args.sf_index + '_pos.txt'
 
 aa = ['A','R', 'N', 'D', 'C', 'Q','E', 'G', 'H', 'I', 'L', 'K', 'M', 'F', 'P', 'S', 'T','W', 'Y', 'V']
 

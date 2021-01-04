@@ -13,6 +13,8 @@ def pssm_extraction(filename):
         del lines[0]
         
         for line in lines:
+            if 'k' in line:
+                break
             elements = line.strip().split()
             temp=[]
             for i in elements:

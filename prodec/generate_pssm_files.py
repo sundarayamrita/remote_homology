@@ -1,6 +1,7 @@
 import argparse
 from pathlib import Path
 import subprocess
+#import os
 
 pssm_dir = Path.cwd() / "PSSMs"
 homologue_dir = Path.cwd() / "Homologues"
@@ -27,4 +28,6 @@ for query_file in query_dir.iterdir():
 	out_homologues_file = Path(homologue_dir) / (filename + "_out_homologues.txt")
 	num_iters = "3"
 	pssm_output = Path(pssm_dir) / (filename + "_pssm.txt")
+	#blast_cmd = "psiblast -query " + str(query_file) + " -db " + database + " -out " + str(out_homologues_file) + " -num_iterations " + num_iters + " -out_ascii_pssm " + str(pssm_output)
+	#os.system(blast_cmd)
 	subprocess.run(["psiblast", "-query", str(query_file), "-db", database, "-out", out_homologues_file, "-num_iterations", num_iters, "-out_ascii_pssm", pssm_output])
