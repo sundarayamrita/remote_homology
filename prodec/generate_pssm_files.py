@@ -28,7 +28,12 @@ for query_file in query_dir.iterdir():
 	out_homologues_file=str(out_homologues_file)
 	num_iters = "3"
 	pssm_output = Path(pssm_dir) / (filename + "_pssm.txt")
+<<<<<<< HEAD:generate_pssm_files.py
 	pssm_output=str(pssm_output)
+=======
+	#blast_cmd = "psiblast -query " + str(query_file) + " -db " + database + " -out " + str(out_homologues_file) + " -num_iterations " + num_iters + " -out_ascii_pssm " + str(pssm_output)
+	#os.system(blast_cmd)
+>>>>>>> e1b8cb7f9248adfc760789620c82126d7a31b2ec:prodec/generate_pssm_files.py
 	subprocess.run(["psiblast", "-query", str(query_file), "-db", database, "-out", out_homologues_file, "-num_iterations", num_iters, "-out_ascii_pssm", pssm_output])
 	# blast_cmd = "psiblast -query " + str(filename) + " -db " + database + " -out " + out_homologues_file + " -num_iterations " + num_iters + " -out_ascii_pssm " + pssm_output
 	# os.system(blast_cmd)
