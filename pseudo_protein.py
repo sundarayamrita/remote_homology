@@ -16,17 +16,18 @@ else:
 	query_dir = Path(args.pssm_dir)
 
 if args.sf_index:
-	superfamily_file = args.sf_index + '.txt'
+	superfamily_file = args.sf_index + 'pos-5050-trail.txt'
 
 aa = ['A','R', 'N', 'D', 'C', 'Q','E', 'G', 'H', 'I', 'L', 'K', 'M', 'F', 'P', 'S', 'T','W', 'Y', 'V']
 
 with open(superfamily_file, 'a') as dataset:
 
 	for child in query_dir.iterdir():
-
+		print(child)
 		pssm = np.asarray(Extract_PsSM.pssm_extraction(child))
+		print(len(pssm))
 		indices = np.argmax(pssm, axis = 1)
 		pseudo_protein = []
 		for idx in indices:
 			pseudo_protein.append(aa[idx])
-		dataset.write( "".join(pseudo_protein) + '\n')
+		dataset.write(">"+"seq"+'\n'+ "".join(pseudo_protein) + '\n')
