@@ -6,25 +6,28 @@ import numpy as np
 #from Remote-homology.prodec import Extract_PsSM as get_pssm
 
 def pssm_extraction(filename):
-    filename=Path(filename)
+    #filename=Path(filename)
     inputmat=[]
     with open(filename,'r') as f:
         lines = f.readlines()[1:]
         linesnum=len(lines)
-
+        
         del lines[0]
-
-        for line in lines:
-            if 'k' in line:
-                break
+        
+        for i in range(len(lines)):
+            line=lines[i]
             elements = line.strip().split()
             temp=[]
+            if('Lambda' in line):
+                break
             for i in elements:
+                
                 if(i!='' and i<'A'):
                     temp.append(i)
             if(len(temp[1:21])>1):
                 inputmat.append(temp[1:21])
-    return inputmat
+                        
+    return(inputmat)        
 
 def calc_de2(filename):
 
@@ -47,8 +50,8 @@ def calc_de2(filename):
                 p_i2_avg = pssm_row_avg[i2];
                 if i1 == i2 :
                     skip = True
-                    continue;
-                cc = 0;
+                    continue
+                cc = 0
 #                for j in range(L - mu):
 #                    cc += (pssm[j, i1] - p_i1_avg) * (pssm[j + mu, i2][np.newaxis].T - p_i2_avg) / (L - mu)
                 x1 = pssm[: L - mu, i1] - p_i1_avg
@@ -83,6 +86,6 @@ def calc_de1(filename):
 #filename = Path("/home/sundarayamrita/Documents/Programming/repos/Remote-homology/PSSMs/query_8_pssm.txt")
 if __name__ == "__main__":
 
-    filename = Path.cwd() / "query_1037_pssm.txt"
+    filename = Path.cwd() / "query_213_pssm.txt"
     print(calc_de2(filename))
     print(calc_de1(filename).shape)
