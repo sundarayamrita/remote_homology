@@ -4,5 +4,4 @@ Data_single_seq/
 __pycache__/
 *.txt
 *.fasta
-*.swp
 pdbaa
