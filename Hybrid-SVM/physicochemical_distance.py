@@ -20,19 +20,32 @@ def get_physico_dist(file_loc, aa_index_path):
             }
     
     I = normalise(aa_index_path)
+    physico_props = I.shape[0]
     I = np.transpose(I)
-    PDT = np.zeros((531, alpha))
+#    print("shape of I", I.shape)
+    PDT = np.zeros((physico_props, alpha))
     val = 0
 
-    for mu in range(1, alpha + 1, 1):
-        for j in range(531):
-            val = 0
-            for i in range(L - mu):
-                val1 = lookup.get(seq[i], 1)
-                val2 = lookup.get(seq[i + mu], 1)
-                val = val + (I[val1 - 1, j] - I[val2 - 1, j]) ** 2
-                val = val / (L - mu)
-            PDT[j, mu - 1] = val
+    for mu in range(1, alpha + 1):
+        for j in range(physico_props):
+# AT TS WE WERE TOLD TO AVOID VARIABLES THAT ARE TO BE USED ONLY IN THE NEXT LINE SUCH AS val
+# AND IF YOU CANNOT AVOID USING IT THEN GIVE IT A GOOD NAME
+#            val = 0
+#            for i in range(L - mu):
+#                val1 = lookup.get(seq[i], 1)
+#                val2 = lookup.get(seq[i + mu], 1)
+#                val = val + (I[val1 - 1, j] - I[val2 - 1, j]) ** 2
+#                val = val / (L - mu)
+             p1_idx = np.array([lookup.get(seq[i], 1) - 1 for i in range(L - mu)])
+             p2_idx = np.array([lookup.get(seq[i], 1) - 1 for i in range(mu , L)])
+
+#         j = np.array(range(physico_props))
+#         print(j.shape)
+#             print(p1_idx.shape)
+             P1 = I[p1_idx, j]
+             P2 = I[p2_idx, j]
+             dp = np.sum((P1 - P2) / (L - mu))
+             PDT[j, mu - 1] = val
 
 #    print(PDT.shape)
     return PDT
