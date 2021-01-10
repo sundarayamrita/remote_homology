@@ -20,34 +20,38 @@ def get_physico_dist(file_loc, aa_index_path):
             }
     
     I = normalise(aa_index_path)
-    physico_props = I.shape[0]
+    num_props = I.shape[0]
     I = np.transpose(I)
 #    print("shape of I", I.shape)
-    PDT = np.zeros((physico_props, alpha))
+    PDT = np.zeros((num_props, alpha))
     val = 0
+    pdt_l = []
 
     for mu in range(1, alpha + 1):
-        for j in range(physico_props):
+        for j in range(num_props):
 # AT TS WE WERE TOLD TO AVOID VARIABLES THAT ARE TO BE USED ONLY IN THE NEXT LINE SUCH AS val
 # AND IF YOU CANNOT AVOID USING IT THEN GIVE IT A GOOD NAME
-#            val = 0
-#            for i in range(L - mu):
-#                val1 = lookup.get(seq[i], 1)
-#                val2 = lookup.get(seq[i + mu], 1)
-#                val = val + (I[val1 - 1, j] - I[val2 - 1, j]) ** 2
-#                val = val / (L - mu)
-             p1_idx = np.array([lookup.get(seq[i], 1) - 1 for i in range(L - mu)])
-             p2_idx = np.array([lookup.get(seq[i], 1) - 1 for i in range(mu , L)])
+            val = 0
+            for i in range(L - mu):
+                val1 = lookup.get(seq[i], 1)
+                val2 = lookup.get(seq[i + mu], 1)
+                val = val + (I[val1 - 1, j] - I[val2 - 1, j]) ** 2
+                val = val / (L - mu)
 
-#         j = np.array(range(physico_props))
-#         print(j.shape)
-#             print(p1_idx.shape)
-             P1 = I[p1_idx, j]
-             P2 = I[p2_idx, j]
-             dp = np.sum((P1 - P2) / (L - mu))
-             PDT[j, mu - 1] = val
+            PDT[j, mu - 1] = val
+        
+        p1_idx = np.array([lookup.get(seq[i], 1) - 1 for i in range(L - mu)])
+        p2_idx = np.array([lookup.get(seq[i], 1) - 1 for i in range(mu , L)])
+        j = np.pad(np.arange(num_props)[:, np.newaxis], ((0,0),(0,L - mu - 1)), 'edge') #<-- 531x153
+        p1_idx = np.pad(p1_idx[:, np.newaxis], ((0,0),(0, num_props - 1)), 'edge').T #<-- transpose should give right answer
+        p2_idx = np.pad(p2_idx[:, np.newaxis], ((0,0),(0, num_props - 1)), 'edge').T
+        dp = np.sum(np.square(I[p1_idx, j] - I[p2_idx, j]), axis=1) / (L - mu)
+        print("dp shape")
+        print(dp.shape)
+        pdt_l.append(dp)
 
-#    print(PDT.shape)
+    print(PDT)
+    print(np.asarray(pdt_l).T)
     return PDT
 
 if __name__ == "__main__":
