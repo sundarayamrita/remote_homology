@@ -41,5 +41,5 @@ print(pdt_all.shape)
 
 converted_dist = np.hstack((acc_all, pdt_all))
 print(converted_dist.shape)
-with open('pos.npy', 'wb') as f:
+with open('neg.npy', 'wb') as f:
     np.save(f, converted_dist)
