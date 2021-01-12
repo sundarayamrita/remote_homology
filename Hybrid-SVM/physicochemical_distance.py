@@ -20,51 +20,22 @@ def get_physico_dist(file_loc, aa_index_path):
             }
     
     I = normalise(aa_index_path)
-#    K=I
     num_props = I.shape[0]
     I = np.transpose(I)
     print("shape of I", I.shape)
-#    lis_check2=[]
-#    lis_check22=[]
-#    val = 0
-#    mat=np.random.rand(20,531)
     PDT=[]
-#    pdt = np.zeros((num_props, alpha))
-#    sub2=[]
+
     for mu in range(1,alpha+1):
         p1_idx = np.array([lookup.get(seq[i], 1) -1 for i in range(L - mu)])
         p2_idx = np.array([lookup.get(seq[i], 1) - 1 for i in range(mu , L)])
-#        print("p1_idx shape", p1_idx.shape)
-#        p1_values = list(map(I.__getitem__,[p1_idx]))
-#        p2_values = list(map(I.__getitem__,[p2_idx]))
         p1 = I[p1_idx]
         p2 = I[p2_idx]
-#        print("p1_values", len(p1_values[0][0]))
-#        arr=np.sum((p1_values[0]-p2_values[0])**2,axis=0 )
-#        arr=arr/(L-mu)
         dp = np.sum(np.square(p1 - p2), axis = 0) / (L - mu)
         print("dp shape", dp.shape)
-#        PDT.append(arr)
         PDT.append(dp)
 
     PDT = np.asarray(PDT).T
-    
-    # lis_check11=[]
-    # for mu in range(1, alpha + 1):
-    #     for j in range(num_props):
-    #         val = 0
-    #         for i in range(L - mu):
-    #             val1 = lookup.get(seq[i], 1)
-    #             val2 = lookup.get(seq[i + mu], 1)
-    #             lis_check1.append(I[val1-1,j])
-    #             lis_check11.append(I[val2-1,j])
-    #             val = val + (I[val1 - 1, j] - I[val2 - 1, j]) ** 2
-    #         val = val / (L - mu)
-    #         pdt[j, mu - 1] = val
-    # print("Non-vect PDT:",pdt)
-    print("Vect PDT:",PDT)
-    
-  
+    return PDT 
 
 
 if __name__ == "__main__":
