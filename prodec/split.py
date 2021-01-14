@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 
 def spliting(filepath,dataseqs) :
-
+    
     f = open(filepath,"r")
     records = list(SeqIO.parse(f, "fasta"))
     l  = len(records)
