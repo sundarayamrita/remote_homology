@@ -6,6 +6,7 @@ from split import spliting
 from generate_pssm_files import generating_pssm
 from pseudo_protein import pseudo_proteins
 
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-seq_file", help = "file containing sequences", type = str)
 parser.add_argument("-db_path", help = "path to database such as pdb", type = str)
