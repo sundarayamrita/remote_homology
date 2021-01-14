@@ -2,7 +2,6 @@ import numpy as np
 from pathlib import Path
 import argparse
 from normalise_aaindex import normalise  
-from collections import defaultdict
 
 def get_physico_dist(file_loc, aa_index_path):
     
@@ -26,7 +25,8 @@ def get_physico_dist(file_loc, aa_index_path):
     PDT=[]
 
     for mu in range(1,alpha+1):
-        p1_idx = np.array([lookup.get(seq[i], 1) -1 for i in range(L - mu)])
+
+        p1_idx = np.array([lookup.get(seq[i], 1) - 1 for i in range(L - mu)])
         p2_idx = np.array([lookup.get(seq[i], 1) - 1 for i in range(mu , L)])
         p1 = I[p1_idx]
         p2 = I[p2_idx]
@@ -35,7 +35,7 @@ def get_physico_dist(file_loc, aa_index_path):
         PDT.append(dp)
 
     PDT = np.asarray(PDT).T
-    return PDT 
+    return PDT
 
 
 if __name__ == "__main__":
