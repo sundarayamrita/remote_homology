@@ -46,7 +46,7 @@ from physicochemical_distance import get_physico_dist
 
 def Distance_Transforms(pssm_dir,seq_dir,filename) :
 
-    
+    list_files=[]
     aaindex_path = Path.cwd() / "aaindex_format.txt"
 
     # parser = argparse.ArgumentParser()
@@ -64,7 +64,7 @@ def Distance_Transforms(pssm_dir,seq_dir,filename) :
    
     
     for pssm_file in pssm_dir.iterdir():
-
+        list_files.append(pssm_file.stem)
         de1 = calc_de1(pssm_file)
         de2 = calc_de2(pssm_file)
     #acc = np.append(de2, de1, axis=1)
@@ -77,7 +77,10 @@ def Distance_Transforms(pssm_dir,seq_dir,filename) :
 
     pdt_all = []
     for seq_file in seq_dir.iterdir():
-        pdt_all.append(get_physico_dist(seq_file, aaindex_path))
+        seq=seq_file.stem + "_pssm"
+        if seq in list_files:
+        
+            pdt_all.append(get_physico_dist(seq_file, aaindex_path))
 
     pdt_all = np.asarray(pdt_all, dtype = np.float32)
     print(pdt_all.shape)
@@ -85,5 +88,32 @@ def Distance_Transforms(pssm_dir,seq_dir,filename) :
     converted_dist = np.hstack((acc_all, pdt_all))
     print(converted_dist.shape)
     with open((filename+'.npy'), 'wb') as f:
-        np.save(f, converted_dist)
+            np.save(f, converted_dist)
 
+
+
+
+
+def checking_trial(seqs_dir,pssm_dir):
+    list_files=[]
+    aaindex_path = Path.cwd() / "aaindex_format.txt"
+    filename="tRIALS"
+    for pssm_file in pssm_dir.iterdir():
+        list_files.append(pssm_file.stem)
+    
+    pdt_all = []
+    for seq_file in seqs_dir.iterdir():
+        seq=seq_file.stem + "_pssm"
+        if seq in list_files:
+        
+            pdt_all.append(get_physico_dist(seq_file, aaindex_path))
+
+    pdt_all = np.asarray(pdt_all, dtype = np.float32)
+    print(pdt_all.shape)
+
+    
+
+
+
+if __name__=="__main__":
+   checking_trial(Path(r"C:\Users\meera\OneDrive\Desktop\Homology\blast_gen_files_single\Remote-homology\Hybrid-SVM\pos-train.c.1.1"),Path(r"C:\Users\meera\OneDrive\Desktop\Homology\blast_gen_files_single\Remote-homology\Hybrid-SVM\pos-train.c.1.1PSSMs"))
