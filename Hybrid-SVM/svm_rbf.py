@@ -2,32 +2,22 @@ import numpy as np
 import argparse
 from pathlib import Path
 
-pos_x = np.load('pos.npy')
-neg_x = np.load('neg.npy')
+pos_x = np.load('pos-train.c.1.1.npy')
+neg_x = np.load('neg-train.c.1.1.npy')
 #print("original x pos 35", pos_x[35])
 #print("original x neg 132", neg_x[132])
 
 pos_y = np.ones((pos_x.shape[0]))
 neg_y = np.zeros((neg_x.shape[0]))
-#print("original y pos 35", pos_y[35])
-#print("original y neg 132", neg_y[132])
-
-from numpy.random import MT19937
-from numpy.random import RandomState, SeedSequence
-rs = RandomState(MT19937(SeedSequence(123456789)))
 
 X = np.vstack((pos_x, neg_x))
 print("x shape", X.shape)
-np.random.shuffle(X)
 y = np.concatenate((pos_y, neg_y), axis = 0)
 print("y shape", y.shape)
-np.random.shuffle(y)
 
-#print("shuffled x pos 35", pos_x[35])
-#print("shuffled x neg 132", neg_x[132])
-#print("shuffled y pos 35", pos_y[35])
-#print("shuffled y neg 132", neg_y[132])
-
+shuffle_idx = np.random.permutation(X.shape[0])
+X = X[shuffle_idx]
+y = y[shuffle_idx]
 #from sklearn.svm import SVC
 #from sklearn.datasets import load_iris
 #from sklearn.model_selection import StratifiedShuffleSplit
@@ -44,7 +34,7 @@ np.random.shuffle(y)
 
 #from sklearn.model_selection import ShuffleSplit
 from sklearn.model_selection import train_test_split
-from sklearn import svm
+from sklearn import svm, metrics
 from sklearn.metrics import confusion_matrix
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
@@ -67,6 +57,10 @@ precision = tp / (tp + fp)
 print("accuracy ", accuracy)
 print("recall ", recall)
 print("precision ", precision)
+
+import matplotlib.pyplot as plt
+metrics.plot_roc_curve(clf, X_test, y_test)
+plt.show()
 
 #rs = ShuffleSplit(n_splits=5, test_size=.20, random_state=0)
 
