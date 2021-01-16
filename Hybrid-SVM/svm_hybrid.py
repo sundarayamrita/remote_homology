@@ -68,7 +68,7 @@ def Distance_Transforms(pssm_dir,seq_dir,filename) :
         de1 = calc_de1(pssm_file)
         de2 = calc_de2(pssm_file)
     #acc = np.append(de2, de1, axis=1)
-        acc = np.vstack((de2, de1.reshape((1, 20, 3))))
+        acc = np.hstack((de2, de1.reshape((20, 1, 3))))
         acc_all.append(acc.reshape(-1, acc.shape[-1]))
 
     acc_all = np.asarray(acc_all, dtype = np.float32)

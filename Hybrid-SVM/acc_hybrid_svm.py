@@ -37,48 +37,57 @@ def calc_de2(filename):
     L = np.size(pssm, 0)
     N = np.size(pssm, 1)
     alpha = 3
-    de2 = np.zeros((N - 1, N, alpha))
+    de2 = np.zeros((N, N - 1, alpha))
 
     for mu in range(alpha):
 
-        for i1 in range(np.size(pssm, 1)):
+        for i in range(N):
 
-            skip = False
-            p_i1_avg = pssm_row_avg[i1];
-            for i2 in range(np.size(pssm, 1)):
+            x1 = pssm[: L - mu, i]
+            x2 = np.delete(pssm[mu: L], i, 1)
+            de2[i, :, mu] = np.matmul(x1, x2).shape
+#            skip_idx = False
+#            p_i1_avg = pssm_row_avg[i1]
+#            x1 = pssm[: L - mu, i1] - pssm_row_avg[i1]
+#            x2 = pssm[mu: L] - pssm_row_avg[i2]
 
-                p_i2_avg = pssm_row_avg[i2];
-                if i1 == i2 :
-                    skip = True
-                    continue
-                cc = 0
-#                for j in range(L - mu):
-#                    cc += (pssm[j, i1] - p_i1_avg) * (pssm[j + mu, i2][np.newaxis].T - p_i2_avg) / (L - mu)
-                x1 = pssm[: L - mu, i1] - p_i1_avg
-                x2 = pssm[mu: L, i2][np.newaxis].T - p_i2_avg
-                cc = np.matmul(x1, x2) / (L - mu)
-#                cc = np.matmul((pssm[ : L - mu, i1]  - p_i1_avg), (pssm[mu : L, i2][np.newaxis].T - p_i2_avg)) / (L - mu)
-                if skip:
-                    de2[i2 - 1, i1, mu] = cc
-                else:
-                    de2[i2, i1, mu] = cc
+#            for i2 in range(np.size(pssm, 1)):
+
+#                p_i2_avg = pssm_row_avg[i2];
+#                if i1 == i2 :
+#                    skip_idx = True
+#                    continue
+#                cc = 0
+#                x1 = pssm[: L - mu, i1] - p_i1_avg
+#                x2 = pssm[mu: L, i2] - p_i2_avg
+#                cc = np.matmul(x1, x2) / (L - mu)
+#                if skip_idx:
+#                    de2[i2 - 1, i1, mu] = cc
+#                else:
+#                    de2[i2, i1, mu] = cc
     return de2
 #    print(de2)
 
 def calc_de1(filename):
 
     pssm = np.asarray(pssm_extraction(filename)).astype(np.float32)
+    print("pssm shape", pssm.shape)
     L = np.size(pssm, 0)
     N = np.size(pssm, 1)
     alpha = 3
 
     pssm_row_avg = np.mean(pssm, axis=0)
     de1 = np.zeros((N, alpha))
+
     for mu in range(alpha):
+ 
         for i in range(N):
-            p_i_avg = pssm_row_avg[i] / (L - mu)
+        
+            p_i_avg = pssm_row_avg[i]
             x1 = pssm[: L - mu, i] - p_i_avg
             x2 = pssm[mu: L, i][np.newaxis].T - p_i_avg
+            x2 = pssm[mu: L, i] - p_i_avg
+#            print(x2.shape)
             de1[i, mu] = np.matmul(x1, x2) / (L - mu)
 #            de1[i, mu] = (np.matmul((pssm[ : L - mu, i]  - p_i_avg), (pssm[mu : L, i][np.newaxis].T - p_i_avg)) / (L - mu))
     return de1
@@ -87,5 +96,10 @@ def calc_de1(filename):
 if __name__ == "__main__":
 
     filename = Path.cwd() / "query_213_pssm.txt"
-    print(calc_de2(filename))
-    print(calc_de1(filename).shape)
+#    print(calc_de2(filename).shape)
+#    print(calc_de1(filename).shape)
+    de1 = calc_de1(filename)
+    de2 = calc_de2(filename)
+    print("de2", de2.shape)
+    acc = np.hstack((de2, de1.reshape((20, 1, 3))))
+    print("acc shape", acc.shape)
