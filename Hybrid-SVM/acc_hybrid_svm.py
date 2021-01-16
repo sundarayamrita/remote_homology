@@ -45,7 +45,7 @@ def calc_de2(filename):
 
             x1 = pssm[: L - mu, i]
             x2 = np.delete(pssm[mu: L], i, 1)
-            de2[i, :, mu] = np.matmul(x1, x2).shape
+            de2[i, :, mu] = np.matmul(x1, x2) / (L - mu)
 #            skip_idx = False
 #            p_i1_avg = pssm_row_avg[i1]
 #            x1 = pssm[: L - mu, i1] - pssm_row_avg[i1]
@@ -100,6 +100,7 @@ if __name__ == "__main__":
 #    print(calc_de1(filename).shape)
     de1 = calc_de1(filename)
     de2 = calc_de2(filename)
+#    print(de2)
     print("de2", de2.shape)
     acc = np.hstack((de2, de1.reshape((20, 1, 3))))
     print("acc shape", acc.shape)
