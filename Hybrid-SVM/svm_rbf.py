@@ -59,6 +59,8 @@ print("recall ", recall)
 print("precision ", precision)
 
 import matplotlib.pyplot as plt
+from sklearn.metrics import roc_auc_score
+print("The ROC Score is:",roc_auc_score(y_test, clf.decision_function(X_test)))
 metrics.plot_roc_curve(clf, X_test, y_test)
 plt.show()
 
