@@ -76,7 +76,7 @@ test_size = int(float(X.shape[0]) * 0.25)
 train_set, test_set = random_split(dataset, [train_size, test_size], 
         generator=torch.Generator().manual_seed(42))
 batch_size = 32
-n_iters = 1000
+n_iters = 10000
 num_epochs = int(n_iters / (len(train_set) / batch_size))
 train_loader = DataLoader(dataset = train_set, batch_size = batch_size, shuffle = True)
 test_loader = DataLoader(dataset = test_set, batch_size = batch_size, shuffle = True)
