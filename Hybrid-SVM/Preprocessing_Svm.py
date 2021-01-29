@@ -10,9 +10,18 @@ from svm_hybrid import Distance_Transforms as DT
 parser = argparse.ArgumentParser()
 parser.add_argument("-seq_file", help = "file containing sequences", type = str)
 parser.add_argument("-db_path", help = "path to database such as pdb", type = str)
+
 args = parser.parse_args()
 
-sf_index = (Path(args.seq_file).stem)[-5:]
+indexed_files = Path.cwd()/"indexedfiles"
+if not os.path.exists(indexed_files):
+	os.mkdir(indexed_files)
+
+sf_index = (Path(args.seq_file).stem)
+start_ind = sf_index.find('.')
+end_ind = len(sf_index)
+sf_index = sf_index[start_ind+1 : end_ind]
+
 print("The Superfamily Index:\n",sf_index)
 if args.db_path:
 	database = args.db_path
@@ -20,17 +29,21 @@ if args.seq_file:
 	filepath = args.seq_file
 filename = Path(filepath).stem
 
-dataseqs = Path.cwd()/filename
+family_files = Path.cwd()/indexed_files/sf_index
+dataseqs = family_files/filename
+if not os.path.exists(family_files):
+	os.mkdir(family_files)
 if not os.path.exists(dataseqs):
 	os.mkdir(dataseqs)
+
 print("The given type of file is:\n",filename)
 
 print("...The splitting into single sequence begins...")
 spliting(filepath,dataseqs)
 print("...The splitting into single sequences ends...")
 print("\n")
-pssm_dir = Path.cwd() / (filename + "PSSMs")
-homologue_dir = Path.cwd() / (filename + "Homologues")
+pssm_dir = family_files/ (filename + "PSSMs")
+homologue_dir = family_files/(filename + "Homologues")
 if not pssm_dir.is_dir() :
 	Path.mkdir(pssm_dir)
 
@@ -47,7 +60,8 @@ generating_pssm(dataseqs,database,pssm_dir,homologue_dir)
 print("\n")
 print("...The PSSM and Homologues generated...\n")
 
-DT(pssm_dir,dataseqs,filename)
+file_loc=family_files/filename
+DT(pssm_dir,dataseqs,file_loc)
 
 
 

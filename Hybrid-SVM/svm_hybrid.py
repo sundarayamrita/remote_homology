@@ -45,7 +45,7 @@ from physicochemical_distance import get_physico_dist
 #     np.save(f, converted_dist)
 
 def Distance_Transforms(pssm_dir,seq_dir,filename) :
-
+    filename = str(filename)
     list_files=[]
     aaindex_path = Path.cwd() / "aaindex_format.txt"
 
