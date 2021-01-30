@@ -21,7 +21,7 @@ def get_physico_dist(file_loc, aa_index_path):
     I = normalise(aa_index_path)
     num_props = I.shape[0]
     I = np.transpose(I)
-    print("shape of I", I.shape)
+    #print("shape of I", I.shape)
     PDT=[]
 
     for mu in range(1,alpha+1):
@@ -31,7 +31,7 @@ def get_physico_dist(file_loc, aa_index_path):
         p1 = I[p1_idx]
         p2 = I[p2_idx]
         dp = np.sum(np.square(p1 - p2), axis = 0) / (L - mu)
-        print("dp shape", dp.shape)
+        #print("dp shape", dp.shape)
         PDT.append(dp)
 
     PDT = np.asarray(PDT).T

@@ -6,14 +6,14 @@ import sys
 sys.path.append("..")
 from prodec.split import spliting
 from prodec.generate_pssm_files import generating_pssm
-from svm_hybrid import Distance_Transforms as DT
+from accumulate_dt import distance_transforms as DT
 parser = argparse.ArgumentParser()
 parser.add_argument("-seq_file", help = "file containing sequences", type = str)
 parser.add_argument("-db_path", help = "path to database such as pdb", type = str)
 
 args = parser.parse_args()
 
-indexed_files = Path.cwd()/"indexedfiles"
+indexed_files = Path.cwd()/"indexedFiles"
 if not os.path.exists(indexed_files):
 	os.mkdir(indexed_files)
 
@@ -22,9 +22,11 @@ start_ind = sf_index.find('.')
 end_ind = len(sf_index)
 sf_index = sf_index[start_ind+1 : end_ind]
 
-print("The Superfamily Index:\n",sf_index)
+print("The Superfamily Index:\n", sf_index)
 if args.db_path:
 	database = args.db_path
+else:
+        database = Path.cwd()/"pdb_test"
 if args.seq_file:
 	filepath = args.seq_file
 filename = Path(filepath).stem
@@ -36,10 +38,10 @@ if not os.path.exists(family_files):
 if not os.path.exists(dataseqs):
 	os.mkdir(dataseqs)
 
-print("The given type of file is:\n",filename)
+print("The given type of file is:\n", filename)
 
 print("...The splitting into single sequence begins...")
-spliting(filepath,dataseqs)
+spliting(filepath, dataseqs)
 print("...The splitting into single sequences ends...")
 print("\n")
 pssm_dir = family_files/ (filename + "PSSMs")
@@ -56,14 +58,9 @@ superfamily_file = filename + 'pseudo_protein_seq.txt'
 print("...The PSSM and Homologues generation begins...\n")
 
 
-generating_pssm(dataseqs,database,pssm_dir,homologue_dir)
+generating_pssm(dataseqs, database, pssm_dir, homologue_dir)
 print("\n")
 print("...The PSSM and Homologues generated...\n")
 
 file_loc=family_files/filename
-DT(pssm_dir,dataseqs,file_loc)
-
-
-
-
-
+DT(pssm_dir, dataseqs, file_loc)
