@@ -13,7 +13,7 @@ parser.add_argument("-db_path", help = "path to database such as pdb", type = st
 
 args = parser.parse_args()
 
-indexed_files = Path.cwd()/"indexedFiles"
+indexed_files = Path.cwd()/"indexed_files"
 if not os.path.exists(indexed_files):
 	os.mkdir(indexed_files)
 
