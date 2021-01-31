@@ -47,8 +47,8 @@ spliting(filepath, dataseqs)
 print("...The splitting into single sequences ends...")
 print("\n")
 
-pssm_dir = family_files/ (filename + "PSSMs")
-homologue_dir = family_files/(filename + "Homologues")
+pssm_dir = family_files / (filename + "PSSMs")
+homologue_dir = family_files /(filename + "Homologues")
 
 if not pssm_dir.is_dir() :
 	Path.mkdir(pssm_dir)
@@ -64,5 +64,4 @@ generating_pssm(dataseqs, database, pssm_dir, homologue_dir)
 
 print("\n...The PSSM and Homologues generated...\n")
 
-file_loc = family_files/filename
-DT(pssm_dir, dataseqs, file_loc)
+DT(pssm_dir, dataseqs)

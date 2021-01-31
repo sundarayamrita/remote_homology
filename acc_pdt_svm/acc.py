@@ -38,7 +38,7 @@ def calc_de2(filename):
     alpha = 3
     de2 = np.zeros((N, N - 1, alpha))
 
-    for mu in range(1, alpha + 1):
+    for mu in range(alpha):
 
         for i in range(N):
 
@@ -78,7 +78,7 @@ def calc_de1(filename):
     pssm_row_avg = np.mean(pssm, axis=0)
     de1 = np.zeros((N, alpha))
 
-    for mu in range(1, alpha + 1):
+    for mu in range(alpha):
  
         for i in range(N):
         
