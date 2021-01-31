@@ -4,6 +4,8 @@ from torch import nn
 from torch.utils.data import TensorDataset, DataLoader, random_split
 #from torch.utils.data.sampler import SubsetRandomSampler
 import numpy as np
+import argparse
+from pathlib import Path
 
 class CNNModel(nn.Module):
     def __init__(self):
@@ -23,7 +25,7 @@ class CNNModel(nn.Module):
         self.maxpool2 = nn.MaxPool2d(kernel_size=1)
 
         # Fully connected 1 (readout)
-        self.fc1 = nn.Linear(32 * 465 * 1, 2) #<--calc why wrong
+        self.fc1 = nn.Linear(32 * 465 * 1, 2)
         # self.fc1 = nn.Linear(32 * 232, 1)
 
     def forward(self, x):
@@ -52,31 +54,60 @@ class CNNModel(nn.Module):
 
         return out
 
-pos_x = np.load('pos-train.c.1.1.npy')
-neg_x = np.load('neg-train.c.1.1.npy')
+parser = argparse.ArgumentParser()
+parser.add_argument("-data_dir", help = "dataset folder", type = str)
+args = parser.parse_args()
+if not args.data_dir:
+    print("Dataset directory does not exist")
+    exit()
+else:
+    dataset = Path(args.data_dir)
+
+#pos_x = np.load('pos-train.c.1.1.npy')
+#neg_x = np.load('neg-train.c.1.1.npy')
+for file in sorted(dataset.glob('*.npy')):
+    if 'pos-train' in file.name:
+        pos_x = np.load(file)
+    if 'neg-train' in file.name:
+        neg_x = np.load(file)
+    if 'pos-test' in file.name:
+        pos_test_x = np.load(file)
+    if 'neg-test' in file.name:
+        neg_test_x = np.load(file)
 
 pos_y = np.ones((pos_x.shape[0]))
 neg_y = np.zeros((neg_x.shape[0]))
+
+pos_test_y = np.ones((pos_test_x.shape[0]))
+neg_test_y = np.zeros((neg_test_x.shape[0]))
 
 X = np.vstack((pos_x, neg_x))
 print("x shape", X.shape)
 y = np.concatenate((pos_y, neg_y), axis = 0)
 print("y shape", y.shape)
 
+X_test = np.vstack((pos_test_x, neg_test_x))
+print("x test shape", X_test.shape)
+y_test = np.concatenate((pos_test_y, neg_test_y), axis = 0)
+print("y test shape", y_test.shape)
+
 #shuffle_idx = np.random.permutation(X.shape[0])
 #X = torch.from_numpy(X[shuffle_idx])
 #y = torch.from_numpy(y[shuffle_idx])
 #X = torch.from_numpy(X).float()
 #y = torch.from_numpy(y).float()
-dataset = TensorDataset(torch.from_numpy(X), torch.from_numpy(y))
+
+train_set = TensorDataset(torch.from_numpy(X), torch.from_numpy(y))
+test_set = TensorDataset(torch.from_numpy(X_test), torch.from_numpy(y_test))
+
 #train_size = np.asarray(X.shape) * 0.75
 #test_size = np.asarray(X.shape) * 0.25
-train_size = int(float(X.shape[0]) * 0.75)
-test_size = int(float(X.shape[0]) * 0.25)
-train_set, test_set = random_split(dataset, [train_size, test_size], 
-        generator=torch.Generator().manual_seed(42))
+#train_size = int(float(X.shape[0]) * 0.75)
+#test_size = int(float(X.shape[0]) * 0.25)
+#train_set, test_set = random_split(dataset, [train_size, test_size], generator=torch.Generator().manual_seed(42))
+
 batch_size = 32
-n_iters = 1000
+n_iters = 10000
 num_epochs = int(n_iters / (len(train_set) / batch_size))
 train_loader = DataLoader(dataset = train_set, batch_size = batch_size, shuffle = True)
 test_loader = DataLoader(dataset = test_set, batch_size = batch_size, shuffle = True)

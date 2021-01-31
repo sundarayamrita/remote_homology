@@ -71,7 +71,7 @@ def calc_de2(filename):
 def calc_de1(filename):
 
     pssm = np.asarray(pssm_extraction(filename)).astype(np.float32)
-    print("pssm shape", pssm.shape)
+#    print("pssm shape", pssm.shape)
     L = np.size(pssm, 0)
     N = np.size(pssm, 1)
     alpha = 3
