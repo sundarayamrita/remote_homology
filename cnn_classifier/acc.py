@@ -3,7 +3,6 @@ import argparse
 from pathlib import Path
 import subprocess
 import numpy as np
-#from Remote-homology.prodec import Extract_PsSM as get_pssm
 
 def pssm_extraction(filename):
     #filename=Path(filename)
@@ -30,9 +29,7 @@ def pssm_extraction(filename):
     return(inputmat)        
 
 
-
-
-def auto_corr(filename):
+def auto_correlation(filename):
 
     pssm = np.asarray(pssm_extraction(filename)).astype(np.float32)
     print("pssm shape", pssm.shape)
@@ -55,12 +52,8 @@ def auto_corr(filename):
 
     return (de1)
 
-#filename = Path("/home/sundarayamrita/Documents/Programming/repos/Remote-homology/PSSMs/query_8_pssm.txt")
+
 if __name__ == "__main__":
 
     filename = Path.cwd() / "query_213_pssm.txt"
-#    print(calc_de2(filename).shape)
-#    print(calc_de1(filename).shape)
-    de1 = auto_corr(filename)
-    print("de1", de1.shape)
-    print("The de1", de1)
+    print("auto correlation", auto_corr(filename).shape)
