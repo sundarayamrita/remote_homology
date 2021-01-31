@@ -3,7 +3,6 @@ import argparse
 from pathlib import Path
 import subprocess
 import numpy as np
-#from Remote-homology.prodec import Extract_PsSM as get_pssm
 
 def pssm_extraction(filename):
     #filename=Path(filename)
