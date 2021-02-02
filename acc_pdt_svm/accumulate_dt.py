@@ -45,7 +45,7 @@ from physicochemical_distance import get_physico_dist
 #     np.save(f, converted_dist)
 
 def distance_transforms(pssm_dir, seq_dir):
-
+    alpha = 10
     filename = str(seq_dir)
     list_files = []
     aaindex_path = Path.cwd() / "aaindex_format.txt"
@@ -58,7 +58,7 @@ def distance_transforms(pssm_dir, seq_dir):
         de1 = calc_de1(pssm_file)
         de2 = calc_de2(pssm_file)
         
-        acc = np.hstack((de2, de1.reshape((20, 1, 3))))
+        acc = np.hstack((de2, de1.reshape((20, 1, alpha))))
         acc_all.append(acc.reshape(-1, acc.shape[-1]))
 
     acc_all = np.asarray(acc_all, dtype = np.float32)
