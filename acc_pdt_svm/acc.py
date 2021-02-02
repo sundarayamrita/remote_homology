@@ -35,7 +35,7 @@ def calc_de2(filename):
     pssm_row_avg = np.mean(pssm, axis=0)
     L = np.size(pssm, 0)
     N = np.size(pssm, 1)
-    alpha = 3
+    alpha = 10
     de2 = np.zeros((N, N - 1, alpha))
 
     for mu in range(alpha):
@@ -73,12 +73,12 @@ def calc_de1(filename):
 #    print("pssm shape", pssm.shape)
     L = np.size(pssm, 0)
     N = np.size(pssm, 1)
-    alpha = 3
+    alpha = 10
 
     pssm_row_avg = np.mean(pssm, axis=0)
     de1 = np.zeros((N, alpha))
 
-    for mu in range(alpha):
+    for mu in range(1,alpha+1,1):
  
         for i in range(N):
         
@@ -87,13 +87,13 @@ def calc_de1(filename):
             x2 = pssm[mu: L, i][np.newaxis].T - p_i_avg
             x2 = pssm[mu: L, i] - p_i_avg
 #            print(x2.shape)
-            de1[i, mu] = np.matmul(x1, x2) / (L - mu)
+            de1[i, mu-1] = np.matmul(x1, x2) / (L - mu)
 #            de1[i, mu] = (np.matmul((pssm[ : L - mu, i]  - p_i_avg), (pssm[mu : L, i][np.newaxis].T - p_i_avg)) / (L - mu))
     return de1
 
 #filename = Path("/home/sundarayamrita/Documents/Programming/repos/Remote-homology/PSSMs/query_8_pssm.txt")
 if __name__ == "__main__":
-
+    alpha = 10
     filename = Path.cwd() / "query_213_pssm.txt"
 #    print(calc_de2(filename).shape)
 #    print(calc_de1(filename).shape)
@@ -101,6 +101,5 @@ if __name__ == "__main__":
     de2 = calc_de2(filename)
     print("de1", de1.shape)
     print("de2", de2.shape)
-    acc = np.hstack((de2, de1.reshape((20, 1, 3))))
-    print(acc)
+    acc = np.hstack((de2, de1.reshape((20, 1, alpha))))
     print("acc shape", acc.shape)
