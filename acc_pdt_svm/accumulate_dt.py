@@ -87,7 +87,7 @@ def standalone(seqs_dir, pssm_dir):
     aaindex_path = Path.cwd() / "aaindex_format.txt"
 #    filename = "TRIALS"
     for pssm_file in pssm_dir.iterdir():
-        distance_transforms(pssm_dir, seqs_dir, seqs_dir)
+        distance_transforms(pssm_dir, seqs_dir)
         list_files.append(pssm_file.stem)
     
     pdt_all = []
@@ -107,5 +107,5 @@ def standalone(seqs_dir, pssm_dir):
 
 if __name__ == "__main__":
    #standalone(Path(r"C:\Users\meera\OneDrive\Desktop\Homology\blast_gen_files_single\Remote-homology\Hybrid-SVM\pos-train.c.1.1"),Path(r"C:\Users\meera\OneDrive\Desktop\Homology\blast_gen_files_single\Remote-homology\Hybrid-SVM\pos-train.c.1.1PSSMs"))
-   standalone(Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/a.4.6/neg-train.a.4.6"), Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/a.4.6/neg-train.a.4.6PSSMs"))
+   standalone(Path(r"C:\Users\meera\OneDrive\Desktop\Homology\blast_gen_files_single\Remote-homology\acc_pdt_svm\indexed_files\c.1.1\pos-train.c.1.1"), Path(r"C:\Users\meera\OneDrive\Desktop\Homology\blast_gen_files_single\Remote-homology\acc_pdt_svm\indexed_files\c.1.1\pos-train.c.1.1PSSMs"))
 

@@ -9,7 +9,7 @@ def get_physico_dist(file_loc, aa_index_path):
         seq = f.readline()
 
     L = len(seq)
-    alpha = 3
+    alpha = 10
 
     lookup = {
             "A":1, "R":2, "N":3, "D":4, "C":5,
