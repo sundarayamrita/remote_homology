@@ -6,24 +6,24 @@ import numpy as np
 
 def pssm_extraction(filename):
     #filename=Path(filename)
-    inputmat=[]
-    with open(filename,'r') as f:
+    inputmat = []
+    with open(filename, 'r') as f:
         lines = f.readlines()[1:]
-        linesnum=len(lines)
+        linesnum = len(lines)
         
         del lines[0]
         
         for i in range(len(lines)):
-            line=lines[i]
+            line = lines[i]
             elements = line.strip().split()
-            temp=[]
+            temp = []
             if('Lambda' in line):
                 break
             for i in elements:
                 
-                if(i!='' and i<'A'):
+                if(i != '' and i<'A'):
                     temp.append(i)
-            if(len(temp[1:21])>1):
+            if(len(temp[1: 21]) > 1):
                 inputmat.append(temp[1:21])
                         
     return(inputmat)        
@@ -32,7 +32,7 @@ def calc_de2(filename):
 
     pssm = np.asarray(pssm_extraction(filename)).astype(np.float32)
 #    print(pssm.shape)
-    pssm_row_avg = np.mean(pssm, axis=0)
+    pssm_row_avg = np.mean(pssm, axis = 0)
     L = np.size(pssm, 0)
     N = np.size(pssm, 1)
     alpha = 10
@@ -89,13 +89,14 @@ def calc_de1(filename):
 #            print(x2.shape)
             de1[i, mu-1] = np.matmul(x1, x2) / (L - mu)
 #            de1[i, mu] = (np.matmul((pssm[ : L - mu, i]  - p_i_avg), (pssm[mu : L, i][np.newaxis].T - p_i_avg)) / (L - mu))
-    print("shape of de1:",de1.shape)
+    #print("shape of de1:",de1.shape)
     return de1
 
 #filename = Path("/home/sundarayamrita/Documents/Programming/repos/Remote-homology/PSSMs/query_8_pssm.txt")
 if __name__ == "__main__":
     alpha = 10
-    filename = Path.cwd() / "query_213_pssm.txt"
+#    filename = Path.cwd() / "query_213_pssm.txt"
+    filename = Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/c.1.1/pos-train.c.1.1PSSMs/query_2303_pssm.txt/")
 #    print(calc_de2(filename).shape)
 #    print(calc_de1(filename).shape)
     de1 = calc_de1(filename)

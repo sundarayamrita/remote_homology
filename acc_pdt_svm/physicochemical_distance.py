@@ -9,7 +9,7 @@ def get_physico_dist(file_loc, aa_index_path):
         seq = f.readline()
 
     L = len(seq)
-    alpha = 3
+    alpha = 10
 
     lookup = {
             "A":1, "R":2, "N":3, "D":4, "C":5,
@@ -24,7 +24,7 @@ def get_physico_dist(file_loc, aa_index_path):
     #print("shape of I", I.shape)
     PDT=[]
 
-    for mu in range(1,alpha+1):
+    for mu in range(1, alpha + 1):
 
         p1_idx = np.array([lookup.get(seq[i], 1) - 1 for i in range(L - mu)])
         p2_idx = np.array([lookup.get(seq[i], 1) - 1 for i in range(mu , L)])
