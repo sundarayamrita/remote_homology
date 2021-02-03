@@ -87,8 +87,8 @@ def standalone(seqs_dir, pssm_dir):
     aaindex_path = Path.cwd() / "aaindex_format.txt"
 #     filename = "TRIALS"
     for pssm_file in pssm_dir.iterdir():
-       distance_transforms(pssm_dir, seqs_dir)
-       list_files.append(pssm_file.stem)
+        distance_transforms(pssm_dir, seqs_dir)
+        list_files.append(pssm_file.stem)
     
     pdt_all = []
     for seq_file in seqs_dir.iterdir():

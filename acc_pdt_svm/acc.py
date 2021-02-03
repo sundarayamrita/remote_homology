@@ -89,7 +89,6 @@ def calc_de1(filename):
 #            print(x2.shape)
             de1[i, mu-1] = np.matmul(x1, x2) / (L - mu)
 #            de1[i, mu] = (np.matmul((pssm[ : L - mu, i]  - p_i_avg), (pssm[mu : L, i][np.newaxis].T - p_i_avg)) / (L - mu))
-    #print("shape of de1:",de1.shape)
     return de1
 
 #filename = Path("/home/sundarayamrita/Documents/Programming/repos/Remote-homology/PSSMs/query_8_pssm.txt")
