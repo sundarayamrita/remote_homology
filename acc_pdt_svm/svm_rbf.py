@@ -41,17 +41,20 @@ print("y test shape", y_test.shape)
 print("test_postive_samples:",pos_test_y.shape)
 print("test_negative_samples:",neg_test_y.shape)
 
-X=np.vstack((X,X_test))
-y = np.hstack((y.T,y_test.T))
+#X=np.vstack((X,X_test))
+#y = np.hstack((y.T,y_test.T))
 shuffle_idx = np.random.permutation(X.shape[0])
 X = X[shuffle_idx]
 y = y[shuffle_idx]
+shuffle_idx_test = np.random.permutation(X_test.shape[0])
+X_test = X_test[shuffle_idx_test]
+y_test = y_test[shuffle_idx_test]
 #from sklearn.svm import SVC
 #from sklearn.datasets import load_iris
 #from sklearn.model_selection import StratifiedShuffleSplit
 #from sklearn.model_selection import GridSearchCV
 
-#C_raange = np.logspace(-2, 10, 13)
+#C_range = np.logspace(-2, 10, 13)
 #gamma_range = np.logspace(-9, 3, 13)
 #param_grid = dict(gamma=gamma_range, C=C_range)
 #cv = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=42)
@@ -64,17 +67,17 @@ y = y[shuffle_idx]
 from sklearn.model_selection import train_test_split
 from sklearn import svm, metrics
 from sklearn.metrics import confusion_matrix
-from sklearn.preprocessing import StandardScaler
-X, X_test, y, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+#from sklearn.preprocessing import StandardScaler
+#X, X_test, y, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
 l, m, n = X.shape
 X = np.reshape(X, (l, m * n))
 a, b, c = X_test.shape
 X_test = np.reshape(X_test, (a, b * c))
-print("printing the sizes:{},{}",X.shape,X_test.shape)
-scaler = StandardScaler()
+#print("printing the sizes:",X.shape, X_test.shape)
+#scaler = StandardScaler()
 
-scaler.fit_transform(X)
-scaler.fit(X_test)
+#scaler.fit_transform(X)
+#scaler.fit(X_test)
 
 
 clf = svm.SVC()
