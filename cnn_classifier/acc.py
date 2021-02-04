@@ -52,6 +52,24 @@ def auto_correlation(filename):
 
     return (de1)
 
+def cros_correlation(fielname):
+
+    pssm = np.asarray(pssm_extraction(filename)).astype(np.float32)
+    pssm_row_avg = np.mean(pssm, axis = 0)
+    L = np.size(pssm, 0)
+    N = np.size(pssm, 1)
+    alpha = 10
+    de2 = np.zeros((N, N - 1, alpha))
+
+    for mu in range(alpha):
+
+        for i in range(N):
+
+            x1 = pssm[: L - mu, i]
+            x2 = np.delete(pssm[mu: L], i, 1)
+            de2[i, :, mu] = np.matmul(x1, x2) / (L - mu)
+
+    return de2
 
 if __name__ == "__main__":
 
