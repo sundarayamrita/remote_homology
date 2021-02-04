@@ -22,10 +22,10 @@ class CNNModel(nn.Module):
         self.cnn2 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=5, stride=1, padding=2)
         self.relu2 = nn.ReLU()
         # Max pool 2
-        self.maxpool2 = nn.MaxPool2d(kernel_size=1)
+        self.maxpool2 = nn.MaxPool2d(kernel_size=2)
 
         # Fully connected 1 (readout)
-        self.fc1 = nn.Linear(32 * 465 * 1, 2)
+        self.fc1 = nn.Linear(32 * 232 * 2, 2)
         # self.fc1 = nn.Linear(32 * 232, 1)
 
     def forward(self, x):
@@ -141,12 +141,13 @@ print(list(model.parameters())[4].size())
 print(list(model.parameters())[5].size())
 
 iter = 0
+alpha = 10
 for epoch in range(num_epochs):
     for i, (x_train, labels) in enumerate(train_loader):
         # Load images
         #images = images.requires_grad_()
         num_samples_train = x_train.size()[0]
-        x_train = x_train.unsqueeze(1).expand(num_samples_train, 1, 931, 3).requires_grad_()
+        x_train = x_train.unsqueeze(1).expand(num_samples_train, 1, 931, alpha).requires_grad_()
 
         # Clear gradients w.r.t. parameters
         optimizer.zero_grad()
@@ -174,7 +175,7 @@ for epoch in range(num_epochs):
             for x_test, labels in test_loader:
                 # Load test set
                 num_samples_test = x_test.size()[0]
-                x_test = x_test.unsqueeze(1).expand(num_samples_test, 1, 931, 3).requires_grad_()
+                x_test = x_test.unsqueeze(1).expand(num_samples_test, 1, 931, alpha).requires_grad_()
 
                 # Forward pass only to get logits/output
                 outputs = model(x_test)
