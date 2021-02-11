@@ -35,7 +35,7 @@ def auto_correlation(filename):
     print("pssm shape", pssm.shape)
     L = np.size(pssm, 0)
     N = np.size(pssm, 1)
-    alpha = 3
+    alpha = 10
 
     pssm_row_avg = np.mean(pssm, axis=0)
     de1 = np.zeros((N, alpha))
@@ -43,19 +43,19 @@ def auto_correlation(filename):
     for mu in range(1,alpha+1,1):
  
         for i in range(N):
+
             p_i_avg = pssm_row_avg[i]
             x1 = pssm[: L - mu, i] - p_i_avg
             x2 = pssm[mu: L, i] - p_i_avg
             d = (np.matmul(x1,x1))/L
-            print("the d is:",d)  
             de1[i, mu-1] = (np.matmul(x1, x2) / (L - mu))/d
 
     return (de1)
 
-def cros_correlation(fielname):
+def cross_correlation(fielname):
 
     pssm = np.asarray(pssm_extraction(filename)).astype(np.float32)
-    pssm_row_avg = np.mean(pssm, axis = 0)
+    pssm_aa_avg = np.mean(pssm, axis = 0)
     L = np.size(pssm, 0)
     N = np.size(pssm, 1)
     alpha = 10
@@ -65,13 +65,16 @@ def cros_correlation(fielname):
 
         for i in range(N):
 
-            x1 = pssm[: L - mu, i]
-            x2 = np.delete(pssm[mu: L], i, 1)
-            de2[i, :, mu] = np.matmul(x1, x2) / (L - mu)
+            x1 = pssm[: L - mu, i] - pssm_aa_avg[i]
+            x2 = np.delete(pssm[mu: L], i, 1) - pssm_aa_avg[i]
+            numerator = np.matmul(x1, x2) / L
+            denominator = np.mean(np.square(np.delete(pssm[: L - mu], i, 1) - pssm_aa_avg[i]), axis = 0) / L
+            de2[i, :, mu] = numerator / denominator
 
     return de2
 
 if __name__ == "__main__":
 
     filename = Path.cwd() / "query_213_pssm.txt"
-    print("auto correlation", auto_corr(filename).shape)
+    print("auto correlation", auto_correlation(filename).shape)
+    print("cross correlation", cross_correlation(filename).shape)
