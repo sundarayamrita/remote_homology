@@ -32,7 +32,6 @@ def pssm_extraction(filename):
 def auto_correlation(filename):
 
     pssm = np.asarray(pssm_extraction(filename)).astype(np.float32)
-    print("pssm shape", pssm.shape)
     L = np.size(pssm, 0)
     N = np.size(pssm, 1)
     alpha = 10
@@ -52,7 +51,7 @@ def auto_correlation(filename):
 
     return (de1)
 
-def cross_correlation(fielname):
+def cross_correlation(filename):
 
     pssm = np.asarray(pssm_extraction(filename)).astype(np.float32)
     pssm_aa_avg = np.mean(pssm, axis = 0)
