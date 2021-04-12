@@ -6,6 +6,7 @@ from torch.utils.data import TensorDataset, DataLoader, random_split
 import numpy as np
 import argparse
 from pathlib import Path
+from sklearn.metrics import roc_auc_score
 
 class CNNModel(nn.Module):
     def __init__(self):
@@ -107,8 +108,8 @@ test_set = TensorDataset(torch.from_numpy(X_test), torch.from_numpy(y_test))
 #train_set, test_set = random_split(dataset, [train_size, test_size], generator=torch.Generator().manual_seed(42))
 
 batch_size = 32
-n_iters = 10000
-num_epochs = int(n_iters / (len(train_set) / batch_size))
+#n_iters = 10000
+num_epochs = 10#int(n_iters / (len(train_set) / batch_size))
 train_loader = DataLoader(dataset = train_set, batch_size = batch_size, shuffle = True)
 test_loader = DataLoader(dataset = test_set, batch_size = batch_size, shuffle = True)
 
@@ -143,6 +144,7 @@ print(list(model.parameters())[5].size())
 iter = 0
 alpha = 10
 for epoch in range(num_epochs):
+    y_pred = np.empty(y_test.shape)
     for i, (x_train, labels) in enumerate(train_loader):
         # Load images
         #images = images.requires_grad_()
@@ -165,31 +167,33 @@ for epoch in range(num_epochs):
         # Updating parameters
         optimizer.step()
 
-        iter += 1
+        # iter += 1
 
-        if iter % 500 == 0:
-            # Calculate Accuracy
-            correct = 0
-            total = 0
-            # Iterate through test dataset
-            for x_test, labels in test_loader:
-                # Load test set
-                num_samples_test = x_test.size()[0]
-                x_test = x_test.unsqueeze(1).expand(num_samples_test, 1, 931, alpha).requires_grad_()
+        # if iter % 500 == 0:
+        # Calculate Accuracy
+    correct = 0
+    total = 0
+    # Iterate through test dataset
+    for i, (x_test, labels) in enumerate(test_loader):
+        # Load test set
+        num_samples_test = x_test.size()[0]
+        x_test = x_test.unsqueeze(1).expand(num_samples_test, 1, 931, alpha).requires_grad_()
 
-                # Forward pass only to get logits/output
-                outputs = model(x_test)
+        # Forward pass only to get logits/output
+        outputs = model(x_test)
 
-                # Get predictions from the maximum value
-                _, predicted = torch.max(outputs.data, 1)
+        # Get predictions from the maximum value
+        _, predicted = torch.max(outputs.data, 1)
+        # Total number of labels
+        total += labels.size(0)
 
-                # Total number of labels
-                total += labels.size(0)
+        # Total correct predictions
+        correct += (predicted == labels).sum()
 
-                # Total correct predictions
-                correct += (predicted == labels).sum()
+        pred_size = [*predicted.size()][0]
+        y_pred[i * pred_size : (i + 1) * (pred_size)] = predicted.numpy()
 
-            accuracy = 100 * correct / total
+    accuracy = 100 * correct / total
 
-            # Print Loss
-            print('Iteration: {}. Loss: {}. Accuracy: {}'.format(iter, loss.item(), accuracy))
+    # Print Loss
+    print('Epoch: {}, Loss: {}, ROC AUC: {}, Accuracy: {}'.format(epoch, loss.item(), roc_auc_score(y_test, y_pred), accuracy))
