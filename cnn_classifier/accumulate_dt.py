@@ -75,7 +75,7 @@ def distance_transforms(pssm_dir, seq_dir):
 
     converted_dist = np.hstack((acc_all, pdt_all))
     print("acc + pdt shape", converted_dist.shape)
-    with open((filename + '.npy'), 'wb') as f:
+    with open((filename + '_corr.npy'), 'wb') as f:
             np.save(f, converted_dist)
 
 

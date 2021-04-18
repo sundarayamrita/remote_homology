@@ -7,7 +7,6 @@ import numpy as np
 import argparse
 from pathlib import Path
 from sklearn.metrics import roc_auc_score
-from sklearn.preprocessing import MinMaxScaler
 
 class CNNModel(nn.Module):
     def __init__(self):
@@ -87,17 +86,12 @@ X = np.vstack((pos_x, neg_x))
 print("x shape", X.shape)
 y = np.concatenate((pos_y, neg_y), axis = 0)
 print("y shape", y.shape)
-scalers = {}
-for i in range(X.shape[1]):
-    scalers[i] = MinMaxScaler()
-    X[:, i, :] = scalers[i].fit_transform(X[:, i, :]) 
 
 X_test = np.vstack((pos_test_x, neg_test_x))
 print("x test shape", X_test.shape)
 y_test = np.concatenate((pos_test_y, neg_test_y), axis = 0)
 print("y test shape", y_test.shape)
-for i in range(X_test.shape[1]):
-    X_test[:, i, :] = scalers[i].transform(X_test[:, i, :]) 
+
 #shuffle_idx = np.random.permutation(X.shape[0])
 #X = torch.from_numpy(X[shuffle_idx])
 #y = torch.from_numpy(y[shuffle_idx])
@@ -107,6 +101,13 @@ for i in range(X_test.shape[1]):
 train_set = TensorDataset(torch.from_numpy(X), torch.from_numpy(y))
 test_set = TensorDataset(torch.from_numpy(X_test), torch.from_numpy(y_test))
 
+
+unique_values_y = np.unique(y)
+print("the unique values in y train is:",unique_values_y)
+
+unique_values_ytest = np.unique(y_test)
+print("the unique values in y test is:",unique_values_ytest)
+
 #train_size = np.asarray(X.shape) * 0.75
 #test_size = np.asarray(X.shape) * 0.25
 #train_size = int(float(X.shape[0]) * 0.75)
@@ -114,15 +115,15 @@ test_set = TensorDataset(torch.from_numpy(X_test), torch.from_numpy(y_test))
 #train_set, test_set = random_split(dataset, [train_size, test_size], generator=torch.Generator().manual_seed(42))
 
 batch_size = 32
-#n_iters = 10000
-num_epochs = 10#int(n_iters / (len(train_set) / batch_size))
+n_iters = 10000
+num_epochs = int(n_iters / (len(train_set) / batch_size))
 train_loader = DataLoader(dataset = train_set, batch_size = batch_size, shuffle = True)
 test_loader = DataLoader(dataset = test_set, batch_size = batch_size, shuffle = True)
 
 model = CNNModel()
 criterion = nn.CrossEntropyLoss()
 learning_rate = 0.01
-
+print("the total no of epochs is",num_epochs)
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 
 print(model.parameters())
@@ -146,11 +147,10 @@ print(list(model.parameters())[4].size())
 
 # Fully Connected Layer Bias
 print(list(model.parameters())[5].size())
-
+pred = []
 iter = 0
 alpha = 10
 for epoch in range(num_epochs):
-    y_pred = np.empty(y_test.shape)
     for i, (x_train, labels) in enumerate(train_loader):
         # Load images
         #images = images.requires_grad_()
@@ -172,34 +172,43 @@ for epoch in range(num_epochs):
 
         # Updating parameters
         optimizer.step()
+    print('epoch: {}. Loss: {}.'.format(epoch, loss.item()))
 
-        # iter += 1
+       
 
-        # if iter % 500 == 0:
-        # Calculate Accuracy
-    correct = 0
-    total = 0
-    # Iterate through test dataset
-    for i, (x_test, labels) in enumerate(test_loader):
-        # Load test set
-        num_samples_test = x_test.size()[0]
-        x_test = x_test.unsqueeze(1).expand(num_samples_test, 1, 931, alpha).requires_grad_()
+        
 
-        # Forward pass only to get logits/output
-        outputs = model(x_test)
 
-        # Get predictions from the maximum value
-        _, predicted = torch.max(outputs.data, 1)
-        # Total number of labels
-        total += labels.size(0)
 
-        # Total correct predictions
-        correct += (predicted == labels).sum()
+            # Calculate Accuracy
+correct = 0
+total = 0
+pred = []
+            # Iterate through test dataset
+for x_test, labels in test_loader:
+                # Load test set
+    num_samples_test = x_test.size()[0]
+    x_test = x_test.unsqueeze(1).expand(num_samples_test, 1, 931, alpha).requires_grad_()
 
-        pred_size = [*predicted.size()][0]
-        y_pred[i * pred_size : (i + 1) * (pred_size)] = predicted.numpy()
+                # Forward pass only to get logits/output
+    outputs = model(x_test)
+
+                # Get predictions from the maximum value
+    _, predicted = torch.max(outputs.data, 1)
+    print("the size of predicted:",predicted.size())
+    print("the type of predicted:",type(predicted.size()))
+    pred.append(predicted)
+
+                # Total number of labels
+    total += labels.size(0)
+
+                # Total correct predictions
+    correct += (predicted == labels).sum()
 
     accuracy = 100 * correct / total
+        
 
-    # Print Loss
-    print('Epoch: {}, Loss: {}, ROC AUC: {}, Accuracy: {}'.format(epoch, loss.item(), roc_auc_score(y_test, y_pred), accuracy))
+            # Print Loss
+
+print("the pred is",pred)
+#print('the ROC score is:',roc_auc_score(y_test,predicted))
