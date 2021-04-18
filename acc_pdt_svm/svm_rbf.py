@@ -1,6 +1,7 @@
 import numpy as np
 import argparse
 from pathlib import Path
+from sklearn.preprocessing import MinMaxScaler
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-data_dir", help = "dataset folder", type = str)
@@ -33,6 +34,10 @@ X = np.vstack((pos_x, neg_x))
 print("x shape", X.shape)
 y = np.concatenate((pos_y, neg_y), axis = 0)
 print("y shape", y.shape)
+scalers = {}
+for i in range(X.shape[1]):
+    scalers[i] = MinMaxScaler()
+    X[:, i, :] = scalers[i].fit_transform(X[:, i, :]) 
 
 X_test = np.vstack((pos_test_x, neg_test_x))
 print("x test shape", X_test.shape)
@@ -40,6 +45,8 @@ y_test = np.concatenate((pos_test_y, neg_test_y), axis = 0)
 print("y test shape", y_test.shape)
 print("test_postive_samples:",pos_test_y.shape)
 print("test_negative_samples:",neg_test_y.shape)
+for i in range(X_test.shape[1]):
+    X_test[:, i, :] = scalers[i].transform(X_test[:, i, :]) 
 
 #X=np.vstack((X,X_test))
 #y = np.hstack((y.T,y_test.T))
