@@ -107,5 +107,5 @@ def standalone(seqs_dir, pssm_dir):
 
 if __name__ == "__main__":
    #standalone(Path(r"C:\Users\meera\OneDrive\Desktop\Homology\blast_gen_files_single\Remote-homology\Hybrid-SVM\pos-train.c.1.1"),Path(r"C:\Users\meera\OneDrive\Desktop\Homology\blast_gen_files_single\Remote-homology\Hybrid-SVM\pos-train.c.1.1PSSMs"))
-   #standalone(Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/c.1.1/pos-train.c.1.1"), Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/c.1.1/pos-train.c.1.1PSSMs"))
-   distance_transforms(Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/a.60.1/pos-test.a.60.1PSSMs"), Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/a.60.1/pos-test.a.60.1"))
+   distance_transforms(Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/c.55.1/pos-train.c.55.1PSSMs"), Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/c.55.1/pos-train.c.55.1"))
+   #distance_transforms(Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/a.60.1/pos-test.a.60.1PSSMs"), Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/a.60.1/pos-test.a.60.1"))
