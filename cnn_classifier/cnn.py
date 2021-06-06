@@ -173,6 +173,12 @@ for epoch in range(num_epochs):
         # Updating parameters
         optimizer.step()
 
+    # Save
+    model_dir = Path.cwd()/'models'
+    if not model_dir.is_dir():
+        model_dir.mkdir()
+    save_filename = 'cnn_' + str(round(loss.item(), 2))
+    torch.save(model.state_dict(), model_dir/save_filename)
         # iter += 1
 
         # if iter % 500 == 0:
