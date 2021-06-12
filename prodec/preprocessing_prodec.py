@@ -38,7 +38,7 @@ if not homologue_dir.is_dir() :
 	Path.mkdir(homologue_dir)
 
 
-superfamily_file = filename + 'pseudo_protein_seq.txt'
+superfamily_file = filename + '_pseudo_protein_seq.txt'
 
 print("...The PSSM and Homologues generation begins...\n")
 
