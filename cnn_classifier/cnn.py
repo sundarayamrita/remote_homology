@@ -8,53 +8,80 @@ import argparse
 from pathlib import Path
 from sklearn.metrics import roc_auc_score
 from sklearn.preprocessing import MinMaxScaler
-
+import torch.nn.functional as F
 class CNNModel(nn.Module):
+    # def __init__(self):
+    #     super(CNNModel, self).__init__()
+
+    #     # Convolution 1
+    #     self.cnn1 = nn.Conv2d(in_channels=1, out_channels=16, kernel_size=5, stride=1, padding=2)
+    #     self.relu1 = nn.ReLU()
+
+    #     # Max pool 1
+    #     self.maxpool1 = nn.MaxPool2d(kernel_size=2)
+
+    #     # Convolution 2
+    #     self.cnn2 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=5, stride=1, padding=2)
+    #     self.relu2 = nn.ReLU()
+    #     # Max pool 2
+    #     self.maxpool2 = nn.MaxPool2d(kernel_size=2)
+
+    #     # Fully connected 1 (readout)
+    #     self.fc1 = nn.Linear(32 * 232 * 2, 2)
+    #     # self.fc1 = nn.Linear(32 * 232, 1)
+
+    # def forward(self, x):
+    #     # Convolution 1
+    #     out = self.cnn1(x)
+    #     out = self.relu1(out)
+
+    #     # Max pool 1
+    #     out = self.maxpool1(out)
+
+    #     # Convolution 2 
+    #     out = self.cnn2(out)
+    #     out = self.relu2(out)
+
+    #     # Max pool 2 
+    #     out = self.maxpool2(out)
+
+    #     # Resize
+    #     # Original size: (100, 32, 7, 7)
+    #     # out.size(0): 100
+    #     # New out size: (100, 32*7*7)
+    #     out = out.view(out.size(0), -1)
+
+    #     # Linear function (readout)
+    #     out = self.fc1(out)
+
+    #     return out
+
+
     def __init__(self):
         super(CNNModel, self).__init__()
-
-        # Convolution 1
-        self.cnn1 = nn.Conv2d(in_channels=1, out_channels=16, kernel_size=5, stride=1, padding=2)
-        self.relu1 = nn.ReLU()
-
-        # Max pool 1
-        self.maxpool1 = nn.MaxPool2d(kernel_size=2)
-
-        # Convolution 2
-        self.cnn2 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=5, stride=1, padding=2)
-        self.relu2 = nn.ReLU()
-        # Max pool 2
-        self.maxpool2 = nn.MaxPool2d(kernel_size=2)
-
-        # Fully connected 1 (readout)
-        self.fc1 = nn.Linear(32 * 232 * 2, 2)
-        # self.fc1 = nn.Linear(32 * 232, 1)
+        self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=16, kernel_size=5, stride=1, padding=2)
+        self.conv2 = torch.nn.Conv2d(in_channels=16,out_channels=32, kernel_size=5,stride=1, padding=2)
+        self.conv3 = torch.nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5,stride=1, padding=2)
+        self.conv4 = torch.nn.Conv2d(in_channels=64, out_channels=64, kernel_size=5, stride =1,  padding=2)
+        self.lstm1 = torch.nn.LSTM(
+            input_size= 931*10,
+            hidden_size=128,
+            num_layers=2,
+        )
+        self.fc2 = torch.nn.Linear(128, 6)
 
     def forward(self, x):
-        # Convolution 1
-        out = self.cnn1(x)
-        out = self.relu1(out)
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv2(x))
+        # x = F.relu(self.conv3(x))
+        # x = F.relu(self.conv4(x))
+        print('X_size:',x.size())
+        x = x.reshape((x.size()[0],32,931*10))
+        x,_ = self.lstm1(x)
+        x = x[:, -1, :]
+        x = self.fc2(x)
+        return (x)
 
-        # Max pool 1
-        out = self.maxpool1(out)
-
-        # Convolution 2 
-        out = self.cnn2(out)
-        out = self.relu2(out)
-
-        # Max pool 2 
-        out = self.maxpool2(out)
-
-        # Resize
-        # Original size: (100, 32, 7, 7)
-        # out.size(0): 100
-        # New out size: (100, 32*7*7)
-        out = out.view(out.size(0), -1)
-
-        # Linear function (readout)
-        out = self.fc1(out)
-
-        return out
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-data_dir", help = "dataset folder", type = str)
@@ -152,6 +179,7 @@ alpha = 10
 for epoch in range(num_epochs):
     y_pred = np.empty(y_test.shape)
     for i, (x_train, labels) in enumerate(train_loader):
+        print("i:",i)
         # Load images
         #images = images.requires_grad_()
         num_samples_train = x_train.size()[0]
@@ -187,6 +215,7 @@ for epoch in range(num_epochs):
     total = 0
     # Iterate through test dataset
     for i, (x_test, labels) in enumerate(test_loader):
+        print("i:",i)
         # Load test set
         num_samples_test = x_test.size()[0]
         x_test = x_test.unsqueeze(1).expand(num_samples_test, 1, 931, alpha).requires_grad_()

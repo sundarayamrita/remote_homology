@@ -55,6 +55,7 @@ def distance_transforms(pssm_dir, seq_dir):
     pssm_dir = Path(pssm_dir)
     
     for pssm_file in pssm_dir.iterdir():
+        print(pssm_file)
         list_files.append(pssm_file.stem)
         de1 = calc_de1(pssm_file)
         de2 = calc_de2(pssm_file)
@@ -65,16 +66,20 @@ def distance_transforms(pssm_dir, seq_dir):
     acc_all = np.asarray(acc_all, dtype = np.float32)
 
     pdt_all = []
+    print("list_files:",list_files)
     for seq_file in seq_dir.iterdir():
         seq = seq_file.stem + "_pssm"
+        print("seq is",seq)
         if seq in list_files:
+            print('enters')
             pdt_all.append(get_physico_dist(seq_file, aaindex_path))
 
     pdt_all = np.asarray(pdt_all, dtype = np.float32)
-
+    print("acc_all shape",acc_all.shape)
+    print("pdt_all shape",pdt_all.shape)
     converted_dist = np.hstack((acc_all, pdt_all))
     print("acc + pdt shape", converted_dist.shape)
-    with open((filename + '.npy'), 'wb') as f:
+    with open((filename + '_cov_.npy'), 'wb') as f:
             np.save(f, converted_dist)
 
 
@@ -90,6 +95,7 @@ def standalone(seqs_dir, pssm_dir):
         distance_transforms(pssm_dir, seqs_dir)
         list_files.append(pssm_file.stem)
     
+    print("list files",list_files)
     pdt_all = []
     for seq_file in seqs_dir.iterdir():
         seq = seq_file.stem + "_pssm"
@@ -105,6 +111,6 @@ def standalone(seqs_dir, pssm_dir):
 
 
 if __name__ == "__main__":
-   #standalone(Path(r"C:\Users\meera\OneDrive\Desktop\Homology\blast_gen_files_single\Remote-homology\Hybrid-SVM\pos-train.c.1.1"),Path(r"C:\Users\meera\OneDrive\Desktop\Homology\blast_gen_files_single\Remote-homology\Hybrid-SVM\pos-train.c.1.1PSSMs"))
+   distance_transforms(Path(r"C:\Users\meera\OneDrive\Desktop\Homology\blast_gen_files_single\Remote-homology_backup\cnn_classifier\indexed_files\c.23.12\neg-test.c.23.12PSSMs"),Path(r"C:\Users\meera\OneDrive\Desktop\Homology\blast_gen_files_single\Remote-homology_backup\cnn_classifier\indexed_files\c.23.12\neg-test.c.23.12"))
    #standalone(Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/c.1.1/pos-train.c.1.1"), Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/c.1.1/pos-train.c.1.1PSSMs"))
-   distance_transforms(Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/a.60.1/pos-test.a.60.1PSSMs"), Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/a.60.1/pos-test.a.60.1"))
+   #distance_transforms(Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/a.60.1/pos-test.a.60.1PSSMs"), Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/a.60.1/pos-test.a.60.1"))

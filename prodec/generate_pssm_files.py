@@ -46,6 +46,6 @@ def generating_pssm(query_dir,database,pssm_dir,homologue_dir) :
 		num_iters = "3"
 		pssm_output = Path(pssm_dir) / (filename + "_pssm.txt")
 		pssm_output=str(pssm_output)
-		subprocess.run(["psiblast", "-query", str(query_file), "-db", database, "-out", out_homologues_file, "-num_iterations", num_iters, "-out_ascii_pssm", pssm_output])
+		subprocess.run(["deltablast", "-query", str(query_file), "-db", database, "-out", out_homologues_file, "-num_iterations", num_iters, "-out_ascii_pssm", pssm_output])
 	# blast_cmd = "psiblast -query " + str(filename) + " -db " + database + " -out " + out_homologues_file + " -num_iterations " + num_iters + " -out_ascii_pssm " + pssm_output
 	# os.system(blast_cmd)

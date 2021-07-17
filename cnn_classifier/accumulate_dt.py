@@ -55,7 +55,7 @@ def distance_transforms(pssm_dir, seq_dir):
     pssm_dir = Path(pssm_dir)
     
     for pssm_file in pssm_dir.iterdir():
-
+        print(pssm_file)
         list_files.append(pssm_file.stem)
         de1 = auto_correlation(pssm_file)
         de2 = cross_correlation(pssm_file)
@@ -73,7 +73,8 @@ def distance_transforms(pssm_dir, seq_dir):
 
     pdt_all = np.asarray(pdt_all, dtype = np.float32)
 
-    converted_dist = np.hstack((acc_all, pdt_all))
+    #converted_dist = np.hstack((acc_all, pdt_all))
+    converted_dist = acc_all
     print("acc + pdt shape", converted_dist.shape)
     with open((filename + '_corr.npy'), 'wb') as f:
             np.save(f, converted_dist)
@@ -107,5 +108,5 @@ def standalone(seqs_dir, pssm_dir):
 
 if __name__ == "__main__":
    #standalone(Path(r"C:\Users\meera\OneDrive\Desktop\Homology\blast_gen_files_single\Remote-homology\Hybrid-SVM\pos-train.c.1.1"),Path(r"C:\Users\meera\OneDrive\Desktop\Homology\blast_gen_files_single\Remote-homology\Hybrid-SVM\pos-train.c.1.1PSSMs"))
-   distance_transforms(Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/c.55.1/pos-train.c.55.1PSSMs"), Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/c.55.1/pos-train.c.55.1"))
    #distance_transforms(Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/a.60.1/pos-test.a.60.1PSSMs"), Path("/home/sundarayamrita/Documents/Programming/repos/remote_homology/acc_pdt_svm/indexed_files/a.60.1/pos-test.a.60.1"))
+    distance_transforms(Path(r"C:\Users\meera\OneDrive\Desktop\Homology\blast_gen_files_single\Remote-homology_backup\acc_pdt_svm\indexed_files\c.1.1\neg-test.c.1.1PSSMs"),Path(r"C:\Users\meera\OneDrive\Desktop\Homology\blast_gen_files_single\Remote-homology_backup\acc_pdt_svm\indexed_files\c.1.1\neg-test.c.1.1"))
