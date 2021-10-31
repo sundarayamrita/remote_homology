@@ -6,6 +6,7 @@ __pycache__/
 *.fasta
 *.npy
 *.swp
+*.pdb
 pdbaa
 pdb_test.*
 models/
