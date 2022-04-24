@@ -3,7 +3,7 @@ import argparse
 from pathlib import Path
 import sys
 sys.path.append("..")
-from prodec.split import spliting
+from prodec.split import splitting, splitting_csv
 from prodec.generate_pssm_files import generating_pssm
 from accumulate_dt import distance_transforms as DT
 
@@ -26,7 +26,7 @@ print("The Superfamily Index:\n", sf_index)
 if args.db_path:
 	database = args.db_path
 else:
-        database = Path.cwd()/"pdb_test"
+	database = Path.cwd()/"pdb_test"
 if args.seq_file:
 	filepath = args.seq_file
 filename = Path(filepath).stem
@@ -34,15 +34,15 @@ filename = Path(filepath).stem
 family_files = Path.cwd()/indexed_files/sf_index
 dataseqs = family_files/filename
 
-if not family_files.is_dir():
-	Path.mkdir(family_files)
-if not dataseqs.is_dir():
-	Path.mkdir(dataseqs)
-
 print("The given type of file is:\n", filename)
 
 print("...The splitting into single sequence begins...")
-spliting(filepath, dataseqs)
+if Path(filepath).suffix == ".csv":
+	splitting_csv(filepath, dataseqs)
+else:
+	if not dataseqs.is_dir():
+		Path.mkdir(dataseqs, parents=True)
+	splitting(filepath, dataseqs)
 print("...The splitting into single sequences ends...")
 print("\n")
 
