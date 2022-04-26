@@ -48,8 +48,10 @@ def generating_pssm(query_dir, database, pssm_dir, homologue_dir):
 
 	if 'binary' in query_dir.name:
 		for gt in ['_neg', '_pos']:
-			query_dir = query_dir.parent / (query_dir.name + gt)
-			generate_pssm_files(query_dir, database, pssm_dir, homologue_dir)
+			query_dir_gt = query_dir.parent / (query_dir.name + gt)
+			pssm_dir_gt = pssm_dir.parent / (pssm_dir.name + gt)
+			homologue_dir_gt = homologue_dir.parent / (homologue_dir.name + gt)
+			generate_pssm_files(query_dir_gt, database, pssm_dir_gt, homologue_dir_gt)
 
 	else:
 		generate_pssm_files(query_dir, database, pssm_dir, homologue_dir)

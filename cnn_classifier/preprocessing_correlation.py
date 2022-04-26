@@ -26,7 +26,7 @@ print("The Superfamily Index:\n", sf_index)
 if args.db_path:
 	database = args.db_path
 else:
-	database = Path.cwd()/"pdb_test"
+	database = Path.cwd()/"cdd_delta"
 if args.seq_file:
 	filepath = args.seq_file
 filename = Path(filepath).stem
@@ -46,8 +46,8 @@ else:
 print("...The splitting into single sequences ends...")
 print("\n")
 
-pssm_dir = family_files / (filename + "PSSMs")
-homologue_dir = family_files /(filename + "Homologues")
+pssm_dir = family_files / (filename + "_PSSMs")
+homologue_dir = family_files /(filename + "_homologues")
 
 if not pssm_dir.is_dir() :
 	Path.mkdir(pssm_dir)
@@ -55,7 +55,11 @@ if not pssm_dir.is_dir() :
 if not homologue_dir.is_dir() :
 	Path.mkdir(homologue_dir)
 
-superfamily_file = filename + 'pseudo_protein_seq.txt'
+superfamily_file = filename + '_pseudo_protein_seq.txt'
+
+if Path(filepath).suffix == ".csv":
+	superfamily_file = filename + '_neg_pseudo_protein_seq.txt'
+	superfamily_file = filename + '_pos_pseudo_protein_seq.txt'
 
 print("...The PSSM and Homologues generation begins...\n")
 
