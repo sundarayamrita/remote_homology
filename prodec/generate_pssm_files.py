@@ -33,7 +33,7 @@ import os
 # 	# blast_cmd = "psiblast -query " + str(filename) + " -db " + database + " -out " + out_homologues_file + " -num_iterations " + num_iters + " -out_ascii_pssm " + pssm_output
 # 	# os.system(blast_cmd)
 
-def generate_pssm_files(query_dir, database, pssm_dir, homologue_dir):
+def generating_pssm(query_dir, database, pssm_dir, homologue_dir):
 
 	for query_file in query_dir.iterdir():
 		filename = query_file.stem
@@ -43,18 +43,6 @@ def generate_pssm_files(query_dir, database, pssm_dir, homologue_dir):
 		pssm_output = Path(pssm_dir) / (filename + "_pssm.txt")
 		pssm_output=str(pssm_output)
 		subprocess.run(["deltablast", "-query", str(query_file), "-db", database, "-out", out_homologues_file, "-num_iterations", num_iters, "-out_ascii_pssm", pssm_output])
-
-def generating_pssm(query_dir, database, pssm_dir, homologue_dir):
-
-	if 'binary' in query_dir.name:
-		for gt in ['_neg', '_pos']:
-			query_dir_gt = query_dir.parent / (query_dir.name + gt)
-			pssm_dir_gt = pssm_dir.parent / (pssm_dir.name + gt)
-			homologue_dir_gt = homologue_dir.parent / (homologue_dir.name + gt)
-			generate_pssm_files(query_dir_gt, database, pssm_dir_gt, homologue_dir_gt)
-
-	else:
-		generate_pssm_files(query_dir, database, pssm_dir, homologue_dir)
 
 
 
