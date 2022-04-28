@@ -28,43 +28,50 @@ if args.db_path:
 else:
 	database = Path.cwd()/"cdd_delta"
 if args.seq_file:
-	filepath = args.seq_file
-filename = Path(filepath).stem
+	filepath = Path(args.seq_file)
+filename = filepath.stem
 
-family_files = Path.cwd()/indexed_files/sf_index
-dataseqs = family_files/filename
-
-print("The given type of file is:\n", filename)
-
-print("...The splitting into single sequence begins...")
-if Path(filepath).suffix == ".csv":
-	splitting_csv(filepath, dataseqs)
+if filepath.suffix == ".csv":
+	family_files = indexed_files/filename
+	for gt in ['_pos', '_neg']:
+		filename = filepath.stem + gt
+		dataseqs = family_files / filename
+		pssm_dir = family_files / filename + "_PSSMs")
+		homologue_dir = family_files / filename + "_homologues")
+		preprocess(filename, dataseqs, filepath, pssm_dir, homologue_dir, database)	
 else:
+	family_files = indexed_files / sf_index
+	dataseqs = family_files / filename
+	pssm_dir = family_files / (filename + "_PSSMs")
+	homologue_dir = family_files / (filename + "_homologues")
+	preprocess(filename, dataseqs, filepath, pssm_dir, homologue_dir, database)
+
+def preprocess(filename, dataseqs, filepath, pssm_dir, homologue_dir, database):
+
+	print("The given type of file is:\n", filepath.stem)
+
+	print("...The splitting into single sequence begins...")
 	if not dataseqs.is_dir():
 		Path.mkdir(dataseqs, parents=True)
-	splitting(filepath, dataseqs)
-print("...The splitting into single sequences ends...")
-print("\n")
+	if filepath.suffix == '.csv':
+		splitting_csv(filepath, dataseqs)
+	else:
+		splitting(filepath, dataseqs)
+	print("...The splitting into single sequences ends...")
+	print("\n")
 
-pssm_dir = family_files / (filename + "_PSSMs")
-homologue_dir = family_files /(filename + "_homologues")
+	if not pssm_dir.is_dir() :
+		Path.mkdir(pssm_dir)
 
-if not pssm_dir.is_dir() :
-	Path.mkdir(pssm_dir)
+	if not homologue_dir.is_dir() :
+		Path.mkdir(homologue_dir)
 
-if not homologue_dir.is_dir() :
-	Path.mkdir(homologue_dir)
+	superfamily_file = filename + '_pseudo_protein_seq.txt'
 
-superfamily_file = filename + '_pseudo_protein_seq.txt'
+	print("...The PSSM and Homologues generation begins...\n")
 
-if Path(filepath).suffix == ".csv":
-	superfamily_file = filename + '_neg_pseudo_protein_seq.txt'
-	superfamily_file = filename + '_pos_pseudo_protein_seq.txt'
+	generating_pssm(dataseqs, database, pssm_dir, homologue_dir)
 
-print("...The PSSM and Homologues generation begins...\n")
+	print("\n...The PSSM and Homologues generated...\n")
 
-generating_pssm(dataseqs, database, pssm_dir, homologue_dir)
-
-print("\n...The PSSM and Homologues generated...\n")
-
-DT(pssm_dir, dataseqs)
+	DT(pssm_dir, dataseqs)
