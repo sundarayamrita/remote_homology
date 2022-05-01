@@ -20,13 +20,17 @@ def splitting(filepath, dataseqs):
 def splitting_csv(filepath, dataseqs_dir):
     
     df = pd.read_csv(filepath)
-
+    if "_pos" in dataseqs_dir.name:
+        df = df[(df['GT']==1)]
+    else:
+        df = df[(df["GT"]==0)]
+        
     for index, row in df.iterrows():
+
         query = "query_" + str(index)
-        if row['GT'] == 0 and '_neg' in dataseqs_dir:
-            query_filepath = dataseqs_dir / query
-        else if row['GT'] == 1 and '_pos' in dataseqs_dir:
-            query_filepath = dataseqs_dir / query
-    
+        query_filepath = dataseqs_dir / query
+        print("the file",query_filepath)
         with open(query_filepath.with_suffix('.txt'), 'w') as query_file:
             query_file.write(row['Sequence'])
+
+        

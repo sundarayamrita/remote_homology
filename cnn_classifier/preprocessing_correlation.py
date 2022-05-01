@@ -7,44 +7,6 @@ from prodec.split import splitting, splitting_csv
 from prodec.generate_pssm_files import generating_pssm
 from accumulate_dt import distance_transforms as DT
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-seq_file", help = "file containing sequences", type = str)
-parser.add_argument("-db_path", help = "path to database such as pdb", type = str)
-
-args = parser.parse_args()
-
-indexed_files = Path.cwd()/"indexed_files"
-if not indexed_files.is_dir():
-	Path.mkdir(indexed_files)
-
-sf_index = (Path(args.seq_file).stem)
-start_ind = sf_index.find('.')
-end_ind = len(sf_index)
-sf_index = sf_index[start_ind + 1 : end_ind]
-
-print("The Superfamily Index:\n", sf_index)
-if args.db_path:
-	database = args.db_path
-else:
-	database = Path.cwd()/"cdd_delta"
-if args.seq_file:
-	filepath = Path(args.seq_file)
-filename = filepath.stem
-
-if filepath.suffix == ".csv":
-	family_files = indexed_files/filename
-	for gt in ['_pos', '_neg']:
-		filename = filepath.stem + gt
-		dataseqs = family_files / filename
-		pssm_dir = family_files / filename + "_PSSMs")
-		homologue_dir = family_files / filename + "_homologues")
-		preprocess(filename, dataseqs, filepath, pssm_dir, homologue_dir, database)	
-else:
-	family_files = indexed_files / sf_index
-	dataseqs = family_files / filename
-	pssm_dir = family_files / (filename + "_PSSMs")
-	homologue_dir = family_files / (filename + "_homologues")
-	preprocess(filename, dataseqs, filepath, pssm_dir, homologue_dir, database)
 
 def preprocess(filename, dataseqs, filepath, pssm_dir, homologue_dir, database):
 
@@ -75,3 +37,42 @@ def preprocess(filename, dataseqs, filepath, pssm_dir, homologue_dir, database):
 	print("\n...The PSSM and Homologues generated...\n")
 
 	DT(pssm_dir, dataseqs)
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-seq_file", help = "file containing sequences", type = str)
+parser.add_argument("-db_path", help = "path to database such as pdb", type = str)
+
+args = parser.parse_args()
+
+indexed_files = Path.cwd()/"indexed_files"
+if not indexed_files.is_dir():
+	Path.mkdir(indexed_files)
+
+sf_index = (Path(args.seq_file).stem)
+start_ind = sf_index.find('.')
+end_ind = len(sf_index)
+sf_index = sf_index[start_ind + 1 : end_ind]
+
+print("The Superfamily Index:\n", sf_index)
+if args.db_path:
+	database = args.db_path
+else:
+	database = Path.cwd()/"cdd_delta"
+if args.seq_file:
+	filepath = Path(args.seq_file)
+filename = filepath.stem
+
+if filepath.suffix == ".csv":
+	family_files = indexed_files/filename
+	for gt in ['_neg']:
+		filename = filepath.stem + gt
+		dataseqs = family_files / filename
+		pssm_dir = family_files / (filename + "_PSSMs")
+		homologue_dir = family_files / (filename + "_homologues")
+		preprocess(filename, dataseqs, filepath, pssm_dir, homologue_dir, database)	
+else:
+	family_files = indexed_files / sf_index
+	dataseqs = family_files / filename
+	pssm_dir = family_files / (filename + "_PSSMs")
+	homologue_dir = family_files / (filename + "_homologues")
+	preprocess(filename, dataseqs, filepath, pssm_dir, homologue_dir, database)
